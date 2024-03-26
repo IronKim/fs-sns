@@ -1,0 +1,17 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    hikari:
+      maximum-pool-size: 4
+      jdbc-url: ${DB_URL}
+      username: ${DB_USERNAME}
+      password: ${DB_PASSWORD}
+      platform: postgres
+      driver-class-name: org.postgresql.Driver
