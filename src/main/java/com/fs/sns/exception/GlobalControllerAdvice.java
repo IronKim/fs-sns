@@ -1,6 +1,6 @@
 package com.fs.sns.exception;
 
-import com.fs.sns.controller.reponse.Response;
+import com.fs.sns.controller.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

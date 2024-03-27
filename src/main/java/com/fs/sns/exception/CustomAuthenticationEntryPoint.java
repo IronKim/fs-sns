@@ -1,6 +1,6 @@
 package com.fs.sns.exception;
 
-import com.fs.sns.controller.reponse.Response;
+import com.fs.sns.controller.response.Response;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

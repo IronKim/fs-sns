@@ -1,4 +1,4 @@
-package com.fs.sns.controller.reponse;
+package com.fs.sns.controller.response;
 
 import com.fs.sns.model.User;
 import com.fs.sns.model.UserRole;

@@ -1,11 +1,12 @@
 package com.fs.sns.controller;
 
-import com.fs.sns.controller.reponse.Response;
+import com.fs.sns.controller.response.Response;
 import com.fs.sns.controller.request.PostCreateRequest;
+import com.fs.sns.controller.request.PostModifyRequest;
 import com.fs.sns.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

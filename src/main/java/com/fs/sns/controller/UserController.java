@@ -1,8 +1,8 @@
 package com.fs.sns.controller;
 
-import com.fs.sns.controller.reponse.Response;
-import com.fs.sns.controller.reponse.UserJoinResponse;
-import com.fs.sns.controller.reponse.UserLoginResponse;
+import com.fs.sns.controller.response.Response;
+import com.fs.sns.controller.response.UserJoinResponse;
+import com.fs.sns.controller.response.UserLoginResponse;
 import com.fs.sns.controller.request.UserJoinRequest;
 import com.fs.sns.model.User;
 import com.fs.sns.service.UserService;
