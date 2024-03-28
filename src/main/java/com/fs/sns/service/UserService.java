@@ -2,8 +2,10 @@ package com.fs.sns.service;
 
 import com.fs.sns.exception.ErrorCode;
 import com.fs.sns.exception.SnsApplicationException;
+import com.fs.sns.model.Alarm;
 import com.fs.sns.model.Entity.UserEntity;
 import com.fs.sns.model.User;
+import com.fs.sns.repository.AlarmEntityRepository;
 import com.fs.sns.repository.UserEntityRepository;
 import com.fs.sns.util.JwtTokenUtils;
 import jakarta.transaction.Transactional;
@@ -21,6 +23,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserEntityRepository userEntityRepository;
+    private final AlarmEntityRepository alarmEntityRepository;
     private final BCryptPasswordEncoder encoder;
 
     @Value("${jwt.secret-key}")
@@ -63,8 +66,11 @@ public class UserService {
         return token;
     }
 
-    public Page<Void> alarmList(String userName, Pageable pageable) {
-        return Page.empty();
+    public Page<Alarm> alarmList(String userName, Pageable pageable) {
+        UserEntity userEntity = userEntityRepository.findByUserName(userName).orElseThrow(() ->
+                new SnsApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", userName)));
+
+        return alarmEntityRepository.findAllByUser(userEntity, pageable).map(Alarm::fromEntity);
 
     }
 }

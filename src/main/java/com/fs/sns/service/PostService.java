@@ -2,16 +2,12 @@ package com.fs.sns.service;
 
 import com.fs.sns.exception.ErrorCode;
 import com.fs.sns.exception.SnsApplicationException;
+import com.fs.sns.model.AlarmArgs;
+import com.fs.sns.model.AlarmType;
 import com.fs.sns.model.Comment;
-import com.fs.sns.model.Entity.CommentEntity;
-import com.fs.sns.model.Entity.LikeEntity;
-import com.fs.sns.model.Entity.PostEntity;
-import com.fs.sns.model.Entity.UserEntity;
+import com.fs.sns.model.Entity.*;
 import com.fs.sns.model.Post;
-import com.fs.sns.repository.CommentEntityRepository;
-import com.fs.sns.repository.LikeEntityRepository;
-import com.fs.sns.repository.PostEntityRepository;
-import com.fs.sns.repository.UserEntityRepository;
+import com.fs.sns.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,6 +25,7 @@ public class PostService {
     private final UserEntityRepository userEntityRepository;
     private final LikeEntityRepository likeEntityRepository;
     private final CommentEntityRepository commentEntityRepository;
+    private final AlarmEntityRepository alarmEntityRepository;
 
     @Transactional
     public void create(String title, String body, String userName) {
@@ -93,6 +90,8 @@ public class PostService {
         // like save
         likeEntityRepository.save(LikeEntity.of(userEntity, postEntity));
 
+        alarmEntityRepository.save(AlarmEntity.of(postEntity.getUser(), AlarmType.NEW_LIKE_ON_POST, new AlarmArgs(userEntity.getId(), postEntity.getId())));
+
     }
 
     public int likeCount(Integer postId) {
@@ -112,6 +111,8 @@ public class PostService {
 
         // comment save
         commentEntityRepository.save(CommentEntity.of(userEntity, postEntity, comment));
+
+        alarmEntityRepository.save(AlarmEntity.of(postEntity.getUser(), AlarmType.NEW_COMMENT_ON_POST, new AlarmArgs(userEntity.getId(), postEntity.getId())));
 
     }
 
