@@ -5,8 +5,11 @@ import com.fs.sns.controller.response.Response;
 import com.fs.sns.controller.response.UserJoinResponse;
 import com.fs.sns.controller.response.UserLoginResponse;
 import com.fs.sns.controller.request.UserJoinRequest;
+import com.fs.sns.exception.ErrorCode;
+import com.fs.sns.exception.SnsApplicationException;
 import com.fs.sns.model.User;
 import com.fs.sns.service.UserService;
+import com.fs.sns.util.ClassUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +37,9 @@ public class UserController {
 
     @GetMapping("/alarm")
     public Response<Page<AlarmResponse>> alarm(Pageable pageable, Authentication authentication) {
-        return Response.success(userService.alarmList(authentication.getName(), pageable).map(AlarmResponse::fromAlarm));
+        User user = ClassUtils.getSafeCastInstance(authentication.getPrincipal(), User.class).orElseThrow(() ->
+                new SnsApplicationException(ErrorCode.INTERNAL_SERVER_ERROR, "Casting to User class failed"));
+        return Response.success(userService.alarmList(user.getId(), pageable).map(AlarmResponse::fromAlarm));
     }
 
 
