@@ -6,6 +6,7 @@ import com.fs.sns.model.Alarm;
 import com.fs.sns.model.Entity.UserEntity;
 import com.fs.sns.model.User;
 import com.fs.sns.repository.AlarmEntityRepository;
+import com.fs.sns.repository.UserCacheRepository;
 import com.fs.sns.repository.UserEntityRepository;
 import com.fs.sns.util.JwtTokenUtils;
 import jakarta.transaction.Transactional;
@@ -25,6 +26,7 @@ public class UserService {
     private final UserEntityRepository userEntityRepository;
     private final AlarmEntityRepository alarmEntityRepository;
     private final BCryptPasswordEncoder encoder;
+    private final UserCacheRepository userCacheRepository;
 
     @Value("${jwt.secret-key}")
     private String secretKey;
@@ -33,8 +35,10 @@ public class UserService {
     private long expiredTimeMs;
 
     public User loadUserByUserName(String userName) {
-        return userEntityRepository.findByUserName(userName).map(User::fromEntity).orElseThrow(() ->
-                new SnsApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", userName)));
+        return userCacheRepository.getUser(userName).orElseGet(() ->
+                userEntityRepository.findByUserName(userName).map(User::fromEntity).orElseThrow(() ->
+                        new SnsApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", userName)))
+                );
     }
 
     @Transactional
@@ -52,18 +56,16 @@ public class UserService {
 
     public String login(String userName, String password) {
         // 회원가입 여부 체크
-        UserEntity userEntity = userEntityRepository.findByUserName(userName).orElseThrow(() ->
-                new SnsApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", userName)));
+        User user = loadUserByUserName(userName);
+        userCacheRepository.setUser(user);
 
         // 비밀번호 체크
-        if(!encoder.matches(password, userEntity.getPassword())) {
+        if(!encoder.matches(password, user.getPassword())) {
             throw new SnsApplicationException(ErrorCode.INVALID_PASSWORD);
         }
 
         // 토큰 생성
-        String token = JwtTokenUtils.generateToken(userName, secretKey, expiredTimeMs);
-
-        return token;
+        return JwtTokenUtils.generateToken(userName, secretKey, expiredTimeMs);
     }
 
     public Page<Alarm> alarmList(Integer userId, Pageable pageable) {

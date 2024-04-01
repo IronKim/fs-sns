@@ -7,6 +7,7 @@ spring:
     hibernate:
       ddl-auto: update
       dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
   datasource:
     hikari:
       maximum-pool-size: 4
@@ -15,6 +16,9 @@ spring:
       password: ${DB_PASSWORD}
       platform: postgres
       driver-class-name: org.postgresql.Driver
+  data:
+    redis:
+        url: {REDIS_URL}
 
 jwt:
   secret-key: ${JWT_SECRET_KEY}
