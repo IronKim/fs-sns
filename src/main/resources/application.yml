@@ -18,7 +18,7 @@ spring:
       driver-class-name: org.postgresql.Driver
   data:
     redis:
-        url: {REDIS_URL}
+        url: ${REDIS_URL}
 
 jwt:
   secret-key: ${JWT_SECRET_KEY}
