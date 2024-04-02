@@ -20,6 +20,29 @@ spring:
     redis:
         url: ${REDIS_URL}
 
+  kafka:
+    properties:
+      security.protocol: SASL_SSL
+      sasl.mechanism: SCRAM-SHA-256
+      sasl.jaas.config: ${KAFKA_SASL_JAAS_CONFIG}
+    consumer:
+      properties.spring.json.trusted.packages: "*"
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+      group-id: alarm
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    listener:
+      ack-mode: MANUAL
+    producer:
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+      key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties.enable.idempotence: false
+    topic:
+      alarm: alarm
+
+
 jwt:
   secret-key: ${JWT_SECRET_KEY}
   #30 days
