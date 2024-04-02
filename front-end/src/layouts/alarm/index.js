@@ -98,20 +98,15 @@ function Alarm() {
 
   useEffect(() => {
     handleGetAlarm();
-
     eventSource = new EventSource("/api/v1/users/alarm/subscribe?token=" + localStorage.getItem('token'));
-
     setAlarmEvent(eventSource);
-
     eventSource.addEventListener("open", function (event) {
       console.log("connection opened");
     });
-
     eventSource.addEventListener("alarm", function (event) {
       console.log(event.data);
       handleGetAlarm();
     });
-
     eventSource.addEventListener("error", function (event) {
       console.log(event.target.readyState);
       if (event.target.readyState === EventSource.CLOSED) {
@@ -119,7 +114,6 @@ function Alarm() {
       }
       eventSource.close();
     });
-    
   }, []);
 
   return (
